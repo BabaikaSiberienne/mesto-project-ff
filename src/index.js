@@ -1,6 +1,8 @@
 import './pages/index.css';
 import { initialCards } from './scripts/cards';
 import { createCard, delCard } from './scripts/card';
+import { buttonAdd, buttonEdit} from './scripts/modal';
+
 // @todo: Темплейт карточки
 const content = document.querySelector('.content'); //берем страницу
 const cardTemplate = document.querySelector('#card-template').content; //получаем содержимое шаблона
@@ -14,4 +16,5 @@ const cardElement = cardTemplate.querySelector('.card').cloneNode(true); //кл�
 initialCards.forEach((card) => {
     placesContainer.append(createCard(card, delCard));
 });
+
 

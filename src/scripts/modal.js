@@ -2,22 +2,26 @@ import { delCard } from "./card"
 import { popUpEdit, popUpAdd } from "../index.js"
 let profileTitle = document.querySelector(".profile__title")
 let profileDescription = document.querySelector(".profile__description")
+const popUpTypeImage = document.querySelector('.popup_type_image')
 const popUpImage = document.querySelector('.popup__image')
 const popUpImageCaption = document.querySelector('.popup__caption')
 
-const closePopUp = (modal) => {
+const toClosePopUp = (modal) => {
     if (event.target === event.currentTarget) {
-        modal.classList.remove('popup_is-opened');
+        closePopUp(modal)
         document.removeEventListener('keydown', handleEscape);
     }
 
 }
 
+function closePopUp (modal) {
+    modal.classList.remove('popup_is-opened');
+}
 
 function handleEscape(evt) {
     if (evt.key === 'Escape') {
         const openedPopUp = document.querySelector('.popup_is-opened')
-        openedPopUp.classList.remove('popup_is-opened');
+        closePopUp(openedPopUp)
         document.removeEventListener('keydown', handleEscape);
     }
 }
@@ -48,19 +52,24 @@ function handleProfileFormSubmit(evt) {
     // Вставьте новые значения с помощью textContent
     profileTitle.textContent = nameInputValue
     profileDescription.textContent = jobInputValue
-    popUpEdit.classList.remove('popup_is-opened');
+    closePopUp(popUpEdit)
 }
 
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 
 
-function handleImagePopup(obj) {
-    popUpImage.src = obj.querySelector('.card__image').src
-    popUpImageCaption.textContent = obj.querySelector('.card__description .card__title').textContent
-    return document.querySelector('.popup_type_image')
+function handleImagePopup(image, title) {
+    // popUpImage.src = event.target.src
+    // // popUpImageCaption.textContent = obj.querySelector('.card__description .card__title').textContent
+    // // return popUpTypeImage
+    // console.log(event.target)
+    popUpImage.src = image.src
+    popUpImageCaption.textContent = title.textContent
+    // console.log( popUpImage, popUpImageCaption)
+    openPopUp(popUpTypeImage)
 }
 
 
 
-export { openPopUp, closePopUp, handleImagePopup, handleProfileFormSubmit }
+export { openPopUp, closePopUp, toClosePopUp, handleImagePopup, handleProfileFormSubmit}

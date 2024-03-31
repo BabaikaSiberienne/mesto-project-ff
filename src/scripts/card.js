@@ -5,16 +5,18 @@ function delCard(event) {
     cardElementClosest.remove();
 }
 
-function createCard(name, link, handleDelete, handColor, handEnhance) {
+function createCard(name, link, handleDelete, handleLike, handImagePopup) {
     const cardTemplate = document.querySelector('#card-template').content; //получаем содержимое шаблона
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true); //клонируем элемент   
     const cardImage = cardElement.querySelector('.card__image')
-    cardElement.querySelector('.card__title').textContent = name
+    const cardTitle =  cardElement.querySelector('.card__title')
+    cardTitle.textContent = name
     cardImage.src = link
+    cardImage.alt = name;
     const delButton = cardElement.querySelector('.card__delete-button'); //берем кнопку удаления
     delButton.addEventListener('click', handleDelete);
-    cardElement.querySelector('.card__like-button').addEventListener('click', handColor)
-    cardElement.querySelector('.card__image').addEventListener('click', () => { openPopUp(handEnhance(cardElement)) });
+    cardElement.querySelector('.card__like-button').addEventListener('click', handleLike)
+    cardImage.addEventListener('click', () => handImagePopup(cardImage, cardTitle));
     return cardElement
 
 }
@@ -25,4 +27,4 @@ function handleLike(event) {
 }
 
 
-export { createCard, delCard, handleLike }
+export { createCard, delCard, handleLike, }

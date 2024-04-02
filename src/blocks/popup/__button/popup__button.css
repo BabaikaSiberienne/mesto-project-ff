@@ -25,3 +25,9 @@
     line-height: 17px;
   }
 }
+
+.popup__button:disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}

@@ -1,7 +1,4 @@
 import { delCard } from "./card"
-const popUpTypeImage = document.querySelector('.popup_type_image')
-const popUpImage = document.querySelector('.popup__image')
-const popUpImageCaption = document.querySelector('.popup__caption')
 const popUpEdit = document.querySelector(".popup_type_edit");
 const popUpAdd = document.querySelector(".popup_type_new-card")
 

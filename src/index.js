@@ -11,18 +11,19 @@ const placesContainer = document.querySelector('.places__list'); //берем к
 const buttonAdd = document.querySelector('.profile__add-button')
 const buttonEdit = document.querySelector('.profile__edit-button')
 const profileForm = document.querySelector(".popup__form") // Воспользуйтесь методом querySelector()
-const nameInputValue = document.querySelector(".popup__input_type_name").value
-const jobInputValue = document.querySelector(".popup__input_type_description").value
-const profileTitle = document.querySelector(".profile__title")
-const profileDescription = document.querySelector(".profile__description")
+let nameInput = document.querySelector(".popup__input_type_name")
+let jobInput = document.querySelector(".popup__input_type_description")
+let profileTitle = document.querySelector(".profile__title")
+let profileDescription = document.querySelector(".profile__description")
+const popUpTypeImage = document.querySelector('.popup_type_image')
+const popUpImage = document.querySelector('.popup__image')
+const popUpImageCaption = document.querySelector('.popup__caption')
 
 
 buttonAdd.addEventListener("click", () => { openPopUp(popUpAdd) });
 buttonEdit.addEventListener("click", () => { 
-    const profileTitle = document.querySelector(".profile__title")
-    const profileDescription = document.querySelector(".profile__description")
-    document.querySelector(".popup__input_type_name").value = profileTitle.textContent
-    document.querySelector(".popup__input_type_description").value = profileDescription.textContent
+    nameInput.value = profileTitle.textContent
+    jobInput.value = profileDescription.textContent
     openPopUp(popUpEdit)
  });
 
@@ -68,8 +69,8 @@ function handleProfileFormSubmit(evt) {
     // Получите значение полей jobInput и nameInput из свойства value
     // Выберите элементы, куда должны быть вставлены значения полей
     // Вставьте новые значения с помощью textContent
-    profileTitle.textContent = nameInputValue
-    profileDescription.textContent = jobInputValue
+    profileTitle.textContent = nameInput.value
+    profileDescription.textContent = jobInput.value
     closePopUp(popUpEdit)
 }
 

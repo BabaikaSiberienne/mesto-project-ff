@@ -1,9 +1,12 @@
 import './pages/index.css';
 import { initialCards } from './scripts/cards';
 import { createCard, delCard, handleLike, cardImage, cardTitle } from './scripts/card';
-import { openPopUp, closePopUp, popUpEdit, popUpAdd } from './scripts/modal';
+import { openPopUp, closePopUp} from './scripts/modal';
 import { enableValidation, clearValidation } from './scripts/validation';
+// import { delCard } from "./card"
 
+const popUpEdit = document.querySelector(".popup_type_edit");
+const popUpAdd = document.querySelector(".popup_type_new-card")
 const popUpAddForm = document.querySelector(".popup_type_new-card .popup__form")
 const inputNameCard = document.querySelector(".popup__input_type_card-name")
 const inputLinkCard = document.querySelector(".popup__input_type_url")
@@ -11,10 +14,10 @@ const placesContainer = document.querySelector('.places__list'); //берем к
 const buttonAdd = document.querySelector('.profile__add-button')
 const buttonEdit = document.querySelector('.profile__edit-button')
 const profileForm = document.querySelector(".popup__form") // Воспользуйтесь методом querySelector()
-let nameInput = document.querySelector(".popup__input_type_name")
-let jobInput = document.querySelector(".popup__input_type_description")
-let profileTitle = document.querySelector(".profile__title")
-let profileDescription = document.querySelector(".profile__description")
+const nameInput = document.querySelector(".popup__input_type_name")
+const jobInput = document.querySelector(".popup__input_type_description")
+const profileTitle = document.querySelector(".profile__title")
+const profileDescription = document.querySelector(".profile__description")
 const popUpTypeImage = document.querySelector('.popup_type_image')
 const popUpImage = document.querySelector('.popup__image')
 const popUpImageCaption = document.querySelector('.popup__caption')
@@ -32,9 +35,8 @@ const popups = document.querySelectorAll('.popup')
 popups.forEach((popup) => {
     const closeButton = popup.querySelector('.popup__close') //выдергиваем кнопку close и сохраняем её в переменную
     closeButton.addEventListener('click', (event) => {
-        if (event.target === event.currentTarget) {
         closePopUp(popup)
-    }})
+    })
     popup.addEventListener('click', (event) => {
         if (event.target === event.currentTarget) {
         closePopUp(popup)
@@ -42,7 +44,6 @@ popups.forEach((popup) => {
 })
 
 profileForm.addEventListener('submit', handleProfileFormSubmit);
-profileForm.addEventListener('input', enableValidation);
 
 
 initialCards.forEach((card) => {
@@ -83,4 +84,3 @@ function handleCardFormSubmit(evt) {
 }
 
 popUpAddForm.addEventListener('submit', handleCardFormSubmit)
-export { popUpAdd, popUpEdit }

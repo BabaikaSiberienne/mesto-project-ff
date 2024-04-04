@@ -43,21 +43,27 @@
         <div class="popup__content">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Редактировать профиль</h3>
-          <form class="popup__form" name="edit-profile">
+          <form class="popup__form" id="popup__form" novalidate name="edit-profile">
             <input
               type="text"
+              id="name__input"
               name="name"
+              pattern="/[a-zа-я\sё\-]/gi"
+              data-error-message="Разрешены только латинские и кирилличиские буквы, знвуи дефисы и пробелы"
               class="popup__input popup__input_type_name"
               placeholder="Имя"
               required minlength="2" maxlength="40"
-            />
+            /><span class="input-error name__input-error "></span>
             <input
               type="text"
+              id="description__input"
               name="description"
+              pattern="/[a-zа-я\sё\-]/gi"
+              data-error-message="Разрешены только латинские и кирилличиские буквы, знвуи дефисы и пробелы"
               class="popup__input popup__input_type_description"
               placeholder="Занятие"
               required minlength="2" maxlength="200"
-            />
+            /><span class="input-error description__input-error "></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>

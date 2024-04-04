@@ -1,31 +1,66 @@
-const popUpFormEditProfile = document.querySelector('.popup__content')
-const popUpButton = document.querySelector(".popup__button")
-const regex = /[" "\wa-zа-я\sё\-]/gi
-const errorMessage = document.createElement('span')
-popUpFormEditProfile.append(errorMessage)
-
-
-function enableValidation () {
-    const nameInput = document.querySelector(".popup__input_type_name").value
-    const jobInput = document.querySelector(".popup__input_type_description").value
-
-    if (!((nameInput.match(regex)) && (jobInput.match(regex)))) {
-            errorMessage.textContent = "Кастомное сообщение об ошибке"
-            popUpButton.setAttribute("disabled", "true")
-            console.log(5)
-        }
-    
-    else {
-        popUpButton.removeAttribute("disabled")
+const showInputError = (formElement, inputElement, errorMessage) => {
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.add('popup__input_type_error');
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add('popup__input-error_active');
+  };
+  
+  const hideInputError = (formElement, inputElement) => {
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.remove('popup__input_type_error');
+    errorElement.classList.remove('popup__input-error_active');
+    errorElement.textContent = '';
+  };
+  
+  const checkInputValidity = (formElement, inputElement) => {
+    if (!inputElement.validity.valid) {
+      showInputError(formElement, inputElement, inputElement.validationMessage);
+    } else {
+      hideInputError(formElement, inputElement);
     }
-}
-
-function clearValidation () {
-
-}
-
-function showError () {
-
-}
-
-export {enableValidation, clearValidation}
+  };
+  
+  const setEventListeners = (formElement) => {
+    const inputList = Array.from(formElement.querySelectorAll('.form__input'));
+    const buttonElement = formElement.querySelector('.form__submit');
+  
+    // чтобы проверить состояние кнопки в самом начале
+    toggleButtonState(inputList, buttonElement);
+    inputList.forEach((inputElement) => {
+      inputElement.addEventListener('input', function () {
+        checkInputValidity(formElement, inputElement);
+        toggleButtonState(inputList, buttonElement);
+      });
+    });
+  };
+  
+  const enableValidation = () => {
+    const formList = Array.from(document.querySelectorAll('.form'));
+    formList.forEach((formElement) => {
+      formElement.addEventListener('submit', (evt) => {
+        evt.preventDefault();
+      });
+      const fieldsetList = Array.from(formElement.querySelectorAll('.form__set'));
+  
+      fieldsetList.forEach((fieldSet) => {
+        setEventListeners(fieldSet);
+      });
+    });
+  };
+  
+  enableValidation();
+  
+  function hasInvalidInput(inputList) {
+    return inputList.some((inputElement) => {
+      return !inputElement.validity.valid;
+    });
+  }
+  
+  function toggleButtonState (inputList, buttonElement) {
+    if (hasInvalidInput(inputList)) {
+    buttonElement.classList.add('button_inactive');
+    } else {
+    buttonElement.classList.remove('button_inactive');
+  }
+  }
+export {enableValidation}

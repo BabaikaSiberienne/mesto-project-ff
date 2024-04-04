@@ -1,6 +1,3 @@
-import { delCard } from "./card"
-const popUpEdit = document.querySelector(".popup_type_edit");
-const popUpAdd = document.querySelector(".popup_type_new-card")
 
 
 
@@ -39,4 +36,4 @@ const openPopUp = (modal) => {
 
 
 
-export { openPopUp, closePopUp, popUpEdit, popUpAdd}
+export { openPopUp, closePopUp}

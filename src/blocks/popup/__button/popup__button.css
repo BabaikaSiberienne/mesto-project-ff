@@ -15,7 +15,7 @@
 }
 
 .popup__button:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgb(0, 0, 0);
   cursor: pointer;
 }
 
@@ -26,9 +26,9 @@
   }
 }
 
-.popup__button:disabled {
+.popup__button_disabled {
   background-color: transparent;
-  color: rgba(0, 0, 0, 0.3);
+  color: rgb(0, 0, 0);
   pointer-events: none;
-  border: 1px #000 solid;
+  border: 1px rgb(0, 0, 0) solid;
 }

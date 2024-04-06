@@ -2,8 +2,7 @@ import './pages/index.css';
 import { initialCards } from './scripts/cards';
 import { createCard, delCard, handleLike, cardImage, cardTitle } from './scripts/card';
 import { openPopUp, closePopUp} from './scripts/modal';
-import { enableValidation, clearValidation } from './scripts/validation';
-// import { delCard } from "./card"
+import { enableValidation, clearValidation} from './scripts/validation';
 
 const popUpEdit = document.querySelector(".popup_type_edit");
 const popUpAdd = document.querySelector(".popup_type_new-card")
@@ -21,6 +20,17 @@ const profileDescription = document.querySelector(".profile__description")
 const popUpTypeImage = document.querySelector('.popup_type_image')
 const popUpImage = document.querySelector('.popup__image')
 const popUpImageCaption = document.querySelector('.popup__caption')
+
+export const validationConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    disabledButtonClass: 'popup__button_disabled',
+    inputErrorSelector: 'popup__input_type_error',
+    errorSelector: 'popup__input-error_active'
+}
+
+enableValidation(validationConfig)
 
 
 buttonAdd.addEventListener("click", () => { openPopUp(popUpAdd) });

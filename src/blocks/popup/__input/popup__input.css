@@ -28,6 +28,6 @@
 
 .popup__input-error_active {
   color: red;
-  border-bottom: red solid 1px;
+  /* border-bottom: red solid 1px; */
   margin-top: 1rem;
 }

@@ -5,18 +5,59 @@ const config = {
         'Content-Type': 'application/json'
     }
 }
+
+const editProfileForm = document.forms.edit_profile
+const editProfileName = editProfileForm.elements.name
+const editProfileDescription = editProfileForm.elements.description
+console.log(editProfileDescription, editProfileName)
+
 export function getF() {
-    
     return fetch(`${config.baseUrl}/users/me`, {
-    headers: config.headers
+        headers: config.headers
     })
-      .then((res) => {
-          if (res.ok) {
-             return res.json(); 
-          }
-      })
-      .catch((err) => {
-        console.log('Ошибка. Запрос не выполнен: ', err);
-      });
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+        })
+        .catch((error) => {
+            console.log('Ошибка. Запрос не выполнен: ', error);
+        });
+}
+
+export function toGetCards() {
+    return fetch(`${config.baseUrl}/cards`, {
+        headers: config.headers
+    })
+        .then((res) => {
+            if (res.ok) {
+                // console.log(res.json())
+                return res.json();
+
+            }
+        })
+        .catch((error) => {
+            console.log('Ошибка. Запрос не выполнен: ', error)
+        })
+}
+
+export function editProfile() {
+    return fetch(`${config.baseUrl}/users/me`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({
+            name: 'Saint-Lauran',
+            about: 'Alchemist and time traveller'
+        }),
+    })
+    .then ((res) => {
+        if (res.ok) {
+            // console.log(res.json())
+            return res.json();
+        }
+    })
+    .catch((error) => {
+        console.log('Ошибка. Запрос не выполнен: ', error)
+    })
 }
 

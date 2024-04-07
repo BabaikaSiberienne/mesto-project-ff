@@ -3,7 +3,7 @@ import { initialCards } from './scripts/cards';
 import { createCard, delCard, handleLike, cardImage, cardTitle } from './scripts/card';
 import { openPopUp, closePopUp} from './scripts/modal';
 import { enableValidation, clearValidation} from './scripts/validation';
-import { getF } from './scripts/api';
+import { getF, toGetCards, editProfile } from './scripts/api';
 
 const popUpEdit = document.querySelector(".popup_type_edit");
 const popUpAdd = document.querySelector(".popup_type_new-card")
@@ -34,16 +34,19 @@ export const validationConfig = {
 
 enableValidation(validationConfig)
 
-Promise.all([getF()])
-    .then(([profile]) => {
-        profileTitle.textContent = profile.name
-        profileDescription.textContent = profile.about
-        profileImage.style.backgroundImage = `url(${profile.avatar})`
+Promise.all([getF(), toGetCards()])
+    .then(([profile, cards]) => {
+        profileTitle.textContent = profile.name;
+        profileDescription.textContent = profile.about;
+        profileImage.style.backgroundImage = `url(${profile.avatar})`;
+        cards.forEach (function(card) {
+            placesContainer.append(createCard(card.name, card.link, delCard, handleLike, profile._id, handleImagePopup))
+        })   
     })
     .catch((error) => {
         console.log(error)
     })
-
+editProfile()
 
 buttonAdd.addEventListener("click", () => { openPopUp(popUpAdd) });
 buttonEdit.addEventListener("click", () => { 
@@ -70,9 +73,9 @@ popups.forEach((popup) => {
 profileForm.addEventListener('submit', handleProfileFormSubmit);
 
 
-initialCards.forEach((card) => {
-    placesContainer.append(createCard(card.name, card.link, delCard, handleLike, handleImagePopup));
-});
+// initialCards.forEach((card) => {
+//     placesContainer.append(createCard(card.name, card.link, delCard, handleLike, handleImagePopup));
+// });
 
 function handleImagePopup(image, title) {
     // popUpImage.src = event.target.src

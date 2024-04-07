@@ -3,6 +3,7 @@ import { initialCards } from './scripts/cards';
 import { createCard, delCard, handleLike, cardImage, cardTitle } from './scripts/card';
 import { openPopUp, closePopUp} from './scripts/modal';
 import { enableValidation, clearValidation} from './scripts/validation';
+import { getF } from './scripts/api';
 
 const popUpEdit = document.querySelector(".popup_type_edit");
 const popUpAdd = document.querySelector(".popup_type_new-card")
@@ -20,17 +21,28 @@ const profileDescription = document.querySelector(".profile__description")
 const popUpTypeImage = document.querySelector('.popup_type_image')
 const popUpImage = document.querySelector('.popup__image')
 const popUpImageCaption = document.querySelector('.popup__caption')
+const profileImage = document.querySelector('.profile__image')
 
 export const validationConfig = {
     formSelector: '.popup__form',
     inputSelector: '.popup__input',
     submitButtonSelector: '.popup__button',
-    disabledButtonClass: 'popup__button_disabled',
+    disabledButtonSelector: 'popup__button_disabled',
     inputErrorSelector: 'popup__input_type_error',
     errorSelector: 'popup__input-error_active'
 }
 
 enableValidation(validationConfig)
+
+Promise.all([getF()])
+    .then(([profile]) => {
+        profileTitle.textContent = profile.name
+        profileDescription.textContent = profile.about
+        profileImage.style.backgroundImage = `url(${profile.avatar})`
+    })
+    .catch((error) => {
+        console.log(error)
+    })
 
 
 buttonAdd.addEventListener("click", () => { openPopUp(popUpAdd) });
@@ -46,10 +58,12 @@ popups.forEach((popup) => {
     const closeButton = popup.querySelector('.popup__close') //выдергиваем кнопку close и сохраняем её в переменную
     closeButton.addEventListener('click', (event) => {
         closePopUp(popup)
+        clearValidation(popup, validationConfig)
     })
     popup.addEventListener('click', (event) => {
         if (event.target === event.currentTarget) {
         closePopUp(popup)
+        clearValidation(popup, validationConfig)
     }})
 })
 

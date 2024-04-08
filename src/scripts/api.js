@@ -1,3 +1,6 @@
+import { createCard } from "./card";
+import { closePopUp } from "./modal"
+
 const config = {
     baseUrl: 'https://nomoreparties.co/v1/wff-cohort-10',
     headers: {
@@ -6,10 +9,15 @@ const config = {
     }
 }
 
+const popUpEdit = document.querySelector(".popup_type_edit");
 const editProfileForm = document.forms.edit_profile
 const editProfileName = editProfileForm.elements.name
 const editProfileDescription = editProfileForm.elements.description
-console.log(editProfileDescription, editProfileName)
+const nameInput = document.querySelector(".popup__input_type_name")
+const jobInput = document.querySelector(".popup__input_type_description")
+const placesContainer = document.querySelector('.places__list'); //берем коробку с местами
+
+// const newCardName = document.forms.
 
 export function getF() {
     return fetch(`${config.baseUrl}/users/me`, {
@@ -46,14 +54,14 @@ export function editProfile() {
         method: 'PATCH',
         headers: config.headers,
         body: JSON.stringify({
-            name: 'Saint-Lauran',
-            about: 'Alchemist and time traveller'
+            name: `${editProfileName.value}`,
+            about: `${editProfileDescription.value}`,
         }),
     })
-    .then ((res) => {
-        if (res.ok) {
-            // console.log(res.json())
-            return res.json();
+    .then ((profile) => {
+        if (profile.ok) {
+            savingPrifileDatafromServerToLocal(nameInput, jobInput, profile.name, profile.about, popUpEdit)
+            // console.log(profile.json())
         }
     })
     .catch((error) => {
@@ -61,3 +69,32 @@ export function editProfile() {
     })
 }
 
+function savingPrifileDatafromServerToLocal (title, description, nameInput, aboutInput, popup) {
+    title.textContent = nameInput
+    description.textContent = aboutInput
+    closePopUp(popup)
+}
+
+export function addCard(card) {
+    return fetch(`${config.baseUrl}/cards`, {
+        method: 'POST',
+        headers: config.headers,
+        body: JSON.stringify({
+            name: card.name,
+            link: card.link,
+        }),
+    })
+    .then ((res) => {
+        if (res.ok) {
+          return res.json()
+        }
+    })
+
+    .catch((error) => {
+        console.log('Ошибка. Запрос не выполнен: ', error)
+    })
+}
+
+function savingAddData (title, link,) {
+
+}

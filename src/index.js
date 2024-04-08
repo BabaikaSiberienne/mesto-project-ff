@@ -3,17 +3,15 @@ import { initialCards } from './scripts/cards';
 import { createCard, delCard, handleLike, cardImage, cardTitle } from './scripts/card';
 import { openPopUp, closePopUp} from './scripts/modal';
 import { enableValidation, clearValidation} from './scripts/validation';
-import { getF, toGetCards, editProfile } from './scripts/api';
+import { getF, toGetCards, editProfile, addCard } from './scripts/api';
 
 const popUpEdit = document.querySelector(".popup_type_edit");
 const popUpAdd = document.querySelector(".popup_type_new-card")
 const popUpAddForm = document.querySelector(".popup_type_new-card .popup__form")
-const inputNameCard = document.querySelector(".popup__input_type_card-name")
-const inputLinkCard = document.querySelector(".popup__input_type_url")
 const placesContainer = document.querySelector('.places__list'); //берем коробку с местами
 const buttonAdd = document.querySelector('.profile__add-button')
 const buttonEdit = document.querySelector('.profile__edit-button')
-const profileForm = document.querySelector(".popup__form") // Воспользуйтесь методом querySelector()
+const profileForm = document.forms.edit_profile // Воспользуйтесь методом querySelector()
 const nameInput = document.querySelector(".popup__input_type_name")
 const jobInput = document.querySelector(".popup__input_type_description")
 const profileTitle = document.querySelector(".profile__title")
@@ -22,6 +20,8 @@ const popUpTypeImage = document.querySelector('.popup_type_image')
 const popUpImage = document.querySelector('.popup__image')
 const popUpImageCaption = document.querySelector('.popup__caption')
 const profileImage = document.querySelector('.profile__image')
+const inputNameCard = document.querySelector(".popup__input_type_card-name")
+const inputLinkCard = document.querySelector(".popup__input_type_url")
 
 export const validationConfig = {
     formSelector: '.popup__form',
@@ -33,22 +33,24 @@ export const validationConfig = {
 }
 
 enableValidation(validationConfig)
-
 Promise.all([getF(), toGetCards()])
     .then(([profile, cards]) => {
         profileTitle.textContent = profile.name;
         profileDescription.textContent = profile.about;
         profileImage.style.backgroundImage = `url(${profile.avatar})`;
         cards.forEach (function(card) {
-            placesContainer.append(createCard(card.name, card.link, delCard, handleLike, profile._id, handleImagePopup))
+            const amount = Object.keys(card.likes).length
+            placesContainer.append(createCard(card.name, card.link, delCard, handleLike, profile._id, handleImagePopup, amount))
+            
         })   
     })
     .catch((error) => {
         console.log(error)
     })
-editProfile()
 
-buttonAdd.addEventListener("click", () => { openPopUp(popUpAdd) });
+
+
+buttonAdd.addEventListener("click", () => { openPopUp(popUpAdd)});
 buttonEdit.addEventListener("click", () => { 
     nameInput.value = profileTitle.textContent
     jobInput.value = profileDescription.textContent
@@ -73,10 +75,6 @@ popups.forEach((popup) => {
 profileForm.addEventListener('submit', handleProfileFormSubmit);
 
 
-// initialCards.forEach((card) => {
-//     placesContainer.append(createCard(card.name, card.link, delCard, handleLike, handleImagePopup));
-// });
-
 function handleImagePopup(image, title) {
     // popUpImage.src = event.target.src
     // // popUpImageCaption.textContent = obj.querySelector('.card__description .card__title').textContent
@@ -99,15 +97,25 @@ function handleProfileFormSubmit(evt) {
     // Вставьте новые значения с помощью textContent
     profileTitle.textContent = nameInput.value
     profileDescription.textContent = jobInput.value
+    editProfile()
     closePopUp(popUpEdit)
 }
 
 function handleCardFormSubmit(evt) {
     evt.preventDefault();
-    placesContainer.prepend(createCard(inputNameCard.value, inputLinkCard.value, delCard, handleLike, handleImagePopup));
+    const newCard = { 
+                link: inputLinkCard.value, 
+                name: inputNameCard.value, 
+                likes: [],
+            } 
+    addCard(newCard)
+    .then((card) => {
+       placesContainer.prepend( createCard(card.name, card.link, delCard, handleLike, handleImagePopup))
+    })
     popUpAddForm.reset()
     closePopUp(popUpAdd);
 
 }
+
 
 popUpAddForm.addEventListener('submit', handleCardFormSubmit)

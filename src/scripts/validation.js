@@ -75,11 +75,5 @@ export function clearValidation(formElement, validationConfig) {
     inputElement.classList.remove(validationConfig.inputErrorSelector);
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     errorElement.textContent = ""
-
-    // inputElement.classList.remove(validationConfig.inputErrorSelector);
-    // errorElement.classList.remove(validationConfig.errorSelector);
-    // errorElement.classList.add(validationConfig.errorSelector);
-    // errorElement.classList.remove(validationConfig.errorSelector);
-    // errorElement.textContent = '';
 }
 

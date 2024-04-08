@@ -5,7 +5,7 @@ function delCard(event) {
     cardElementClosest.remove();
 }
 
-function createCard(name, link, handleDelete, handleLike, handImagePopup) {
+function createCard(name, link, handleDelete, handleLike, id, handImagePopup, likes) {
     const cardTemplate = document.querySelector('#card-template').content; //получаем содержимое шаблона
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true); //клонируем элемент   
     const cardImage = cardElement.querySelector('.card__image')
@@ -16,6 +16,8 @@ function createCard(name, link, handleDelete, handleLike, handImagePopup) {
     const delButton = cardElement.querySelector('.card__delete-button'); //берем кнопку удаления
     delButton.addEventListener('click', handleDelete);
     cardElement.querySelector('.card__like-button').addEventListener('click', handleLike)
+    cardElement.querySelector('.counter').textContent = likes
+    id = id
     cardImage.addEventListener('click', () => handImagePopup(cardImage, cardTitle));
     return cardElement
 
@@ -28,3 +30,4 @@ function handleLike(event) {
 
 
 export { createCard, delCard, handleLike, }
+

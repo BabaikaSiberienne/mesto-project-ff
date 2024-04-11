@@ -1,48 +1,57 @@
 import './pages/index.css';
 import { initialCards } from './scripts/cards';
-import { createCard, delCard, handleLike, cardImage, cardTitle } from './scripts/card';
-import { openPopUp, closePopUp} from './scripts/modal';
-import { enableValidation, clearValidation} from './scripts/validation';
-import { getF, toGetCards, editProfile, addCard } from './scripts/api';
+import { createCard, delCard, cardImage, cardTitle } from './scripts/card';
+import { openPopUp, closePopUp } from './scripts/modal';
+import { enableValidation, clearValidation } from './scripts/validation';
+import { getF, toGetCards, editProfile, addCard, renewAvatar } from './scripts/api';
+import {
+    popUpEdit,
+    popUpAdd,
+    popUpAddForm,
+    placesContainer,
+    buttonAdd,
+    buttonEdit,
+    profileForm,
+    nameInput,
+    jobInput,
+    profileTitle,
+    profileDescription,
+    popUpTypeImage,
+    popUpImage,
+    popUpImageCaption,
+    profileImage,
+    inputNameCard,
+    inputLinkCard,
+    closeButtons,
+    popups,
+    popUpAvatar,
+    avatarForm,
+    linkAvatar,
+    editProfileForm,
+    buttonAvatarForm,
+    formElement,
+    profileEditSubmitButton,
+    editProfileNameInput,
+    editProfileDescriptionInput,
+    buttonTextInDaProcessOfLoading,
+    buttonText,
+    validationConfig
+} from './utils/utils.js'
 
-const popUpEdit = document.querySelector(".popup_type_edit");
-const popUpAdd = document.querySelector(".popup_type_new-card")
-const popUpAddForm = document.querySelector(".popup_type_new-card .popup__form")
-const placesContainer = document.querySelector('.places__list'); //берем коробку с местами
-const buttonAdd = document.querySelector('.profile__add-button')
-const buttonEdit = document.querySelector('.profile__edit-button')
-const profileForm = document.forms.edit_profile // Воспользуйтесь методом querySelector()
-const nameInput = document.querySelector(".popup__input_type_name")
-const jobInput = document.querySelector(".popup__input_type_description")
-const profileTitle = document.querySelector(".profile__title")
-const profileDescription = document.querySelector(".profile__description")
-const popUpTypeImage = document.querySelector('.popup_type_image')
-const popUpImage = document.querySelector('.popup__image')
-const popUpImageCaption = document.querySelector('.popup__caption')
-const profileImage = document.querySelector('.profile__image')
-const inputNameCard = document.querySelector(".popup__input_type_card-name")
-const inputLinkCard = document.querySelector(".popup__input_type_url")
 
-export const validationConfig = {
-    formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__button',
-    disabledButtonSelector: 'popup__button_disabled',
-    inputErrorSelector: 'popup__input_type_error',
-    errorSelector: 'popup__input-error_active'
-}
+    
 
 enableValidation(validationConfig)
+
 Promise.all([getF(), toGetCards()])
     .then(([profile, cards]) => {
         profileTitle.textContent = profile.name;
         profileDescription.textContent = profile.about;
         profileImage.style.backgroundImage = `url(${profile.avatar})`;
-        cards.forEach (function(card) {
+        cards.forEach(function (card) {
             const amount = Object.keys(card.likes).length
-            placesContainer.append(createCard(card.name, card.link, delCard, handleLike, profile._id, handleImagePopup, amount))
-            
-        })   
+            placesContainer.append(createCard(card, profile, handleImagePopup))
+        })
     })
     .catch((error) => {
         console.log(error)
@@ -50,72 +59,119 @@ Promise.all([getF(), toGetCards()])
 
 
 
-buttonAdd.addEventListener("click", () => { openPopUp(popUpAdd)});
-buttonEdit.addEventListener("click", () => { 
+buttonAdd.addEventListener("click", () => {
+    openPopUp(popUpAdd)
+    clearValidation(popUpAdd, validationConfig)
+});
+buttonEdit.addEventListener("click", () => {
+    openPopUp(popUpEdit)
+    clearValidation(popUpEdit, validationConfig)
     nameInput.value = profileTitle.textContent
     jobInput.value = profileDescription.textContent
-    openPopUp(popUpEdit)
- });
+});
 
 
-const popups = document.querySelectorAll('.popup')
-popups.forEach((popup) => {
-    const closeButton = popup.querySelector('.popup__close') //выдергиваем кнопку close и сохраняем её в переменную
-    closeButton.addEventListener('click', (event) => {
+closeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+        const popup = button.closest('.popup')
         closePopUp(popup)
-        clearValidation(popup, validationConfig)
     })
-    popup.addEventListener('click', (event) => {
-        if (event.target === event.currentTarget) {
-        closePopUp(popup)
-        clearValidation(popup, validationConfig)
-    }})
 })
 
-profileForm.addEventListener('submit', handleProfileFormSubmit);
+popups.forEach((modal) => {
+    modal.addEventListener('click', (event) => {
+        if (event.target.classList.contains('popup')) {
+            closePopUp(modal)
+        }
+    })
+})
 
 
-function handleImagePopup(image, title) {
-    // popUpImage.src = event.target.src
-    // // popUpImageCaption.textContent = obj.querySelector('.card__description .card__title').textContent
-    // // return popUpTypeImage
-    // console.log(event.target)
-    popUpImage.src = image.src
-    popUpImageCaption.textContent = title.textContent
-    popUpImage.alt = title.textContent
-    // console.log( popUpImage, popUpImageCaption)
+
+function handleImagePopup(card) {
+    popUpImage.src = card.link
+    popUpImageCaption.textContent = card.name
+    popUpImage.alt = card.name
     openPopUp(popUpTypeImage)
 }
 
 function handleProfileFormSubmit(evt) {
     evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
     // Так мы можем определить свою логику отправки.
-    // О том, как это делать, расскажем позже.
-
+    toLoad(true, buttonEdit)
     // Получите значение полей jobInput и nameInput из свойства value
     // Выберите элементы, куда должны быть вставлены значения полей
     // Вставьте новые значения с помощью textContent
-    profileTitle.textContent = nameInput.value
-    profileDescription.textContent = jobInput.value
     editProfile()
-    closePopUp(popUpEdit)
+        .then((profile) => {
+            profileTitle.textContent = profile.name
+            profileDescription.textContent = profile.about
+            closePopUp(popUpEdit)
+        })
+
+        .catch((err) => {
+            console.log(err)
+        })
+
+        .finally(() => { toLoad(false, buttonEdit) })
+
 }
 
+function openPopUpAvatar() {
+    openPopUp(popUpAvatar)
+    clearValidation(popUpAvatar, validationConfig)
+}
+
+function handleavatarFormSubmit(evt) {
+    evt.preventDefault();
+    toLoad(true, buttonAvatarForm)
+    renewAvatar(linkAvatar.value)
+        .then((profile) => {
+            profileImage.style.backgroundImage = `url(${profile.avatar})`
+            closePopUp(popUpAvatar)
+            avatarForm.reset()
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+        .finally(() => { toLoad(false, buttonAvatarForm) })
+}
 function handleCardFormSubmit(evt) {
     evt.preventDefault();
-    const newCard = { 
-                link: inputLinkCard.value, 
-                name: inputNameCard.value, 
-                likes: [],
-            } 
+    toLoad(true, buttonAdd)
+    const newCard = {
+        link: inputLinkCard.value,
+        name: inputNameCard.value,
+        likes: [],
+    }
     addCard(newCard)
-    .then((card) => {
-       placesContainer.prepend( createCard(card.name, card.link, delCard, handleLike, handleImagePopup))
-    })
-    popUpAddForm.reset()
-    closePopUp(popUpAdd);
+        .then((card) => {
+            placesContainer.prepend(createCard(card, card.owner, handleImagePopup))
+            popUpAddForm.reset()
+            closePopUp(popUpAdd);
+        })
 
+        .catch((err) => {
+            console.log(err)
+        })
+
+        .finally(() => { toLoad(false, buttonAdd) })
 }
 
 
+
+function toLoad(isFetching, button) {
+    if (isFetching) {
+        button.textContent = buttonTextInDaProcessOfLoading
+        button.setAttribute('disabled', 'granny')
+    }
+
+    else {
+        button.textContent = buttonText
+        button.removeAttribute('disabled')
+    }
+}
 popUpAddForm.addEventListener('submit', handleCardFormSubmit)
+profileForm.addEventListener('submit', handleProfileFormSubmit);
+profileImage.addEventListener('click', openPopUpAvatar)
+avatarForm.addEventListener('submit', handleavatarFormSubmit)

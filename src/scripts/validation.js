@@ -36,7 +36,7 @@ const setEventListeners = (formElement, validationConfig) => {
     const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
     const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
     // чтобы проверить состояние кнопки в самом начале
-    toggleButtonState(inputList, buttonElement,validationConfig);
+    toggleButtonState(inputList, buttonElement, validationConfig);
     inputList.forEach((inputElement) => {
         inputElement.addEventListener('input', function () {
             checkInputValidity(formElement, inputElement, validationConfig);
@@ -61,16 +61,19 @@ function hasInvalidInput(inputList) {
 function toggleButtonState(inputList, buttonElement, validationConfig) {
     if (hasInvalidInput(inputList)) {
         buttonElement.classList.add(validationConfig.disabledButtonSelector);
+        buttonElement.setAttribute('disabled', 'granny')
     }
 
     else {
         buttonElement.classList.remove(validationConfig.disabledButtonSelector);
+        buttonElement.removeAttribute('disabled', 'granny')
     }
 }
 
 export function clearValidation(formElement, validationConfig) {
     const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
     buttonElement.classList.add(validationConfig.disabledButtonSelector);
+    buttonElement.setAttribute('disabled', 'granny')
     const inputElement = formElement.querySelector(validationConfig.inputSelector)
     inputElement.classList.remove(validationConfig.inputErrorSelector);
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);

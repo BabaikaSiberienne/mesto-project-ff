@@ -105,7 +105,9 @@
               maxlength="30"
               pattern="^[a-zA-Zа-яА-ЯёЁ\-\s]+$"
               data-error-message="Разрешены только латинские и кириллические буквы, дефисы и пробелы"
-            /><span class="popup__input-error popup__input_type_card-name-error"></span>
+            /><span
+              class="popup__input-error popup__input_type_card-name-error"
+            ></span>
             <input
               type="url"
               id="popup__input_type_url"
@@ -113,13 +115,37 @@
               class="popup__input popup__input_type_url"
               placeholder="Ссылка на картинку"
               required
-            /><span class="popup__input-error popup__input_type_url-error"></span>
+            /><span
+              class="popup__input-error popup__input_type_url-error"
+            ></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
           </form>
         </div>
       </div>
+
+      <div class="popup popup_new-avatar popup_is-animated">
+        <div class="popup__content">
+          <button type="button" class="popup__close"></button>
+          <h3 class="popup__title">Обновить аватар</h3>
+          <form novalidate class="popup__form" name="edit_avatar">
+            <input
+              type="url"
+              name="avatar"
+              id="input__avatar"
+              class="popup__input popup__input-avatar"
+              placeholder="Укажите ссылку на аватар"
+              required
+            />
+            <span class="input__avatar-error"></span>
+            <button type="submit" class="button popup__button">
+              Сохранить
+            </button>
+          </form>
+        </div>
+      </div>
+
       <div class="popup popup_type_image popup_is-animated">
         <div class="popup__content popup__content_content_image">
           <button type="button" class="popup__close"></button>
@@ -135,8 +161,10 @@
         <button type="button" class="card__delete-button"></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <div class="container-for-like"><button type="button" class="card__like-button"></button>
-          <span class="counter"></span></div>
+          <div class="container-for-like">
+            <button type="button" class="card__like-button"></button>
+            <span class="counter"></span>
+          </div>
         </div>
       </li>
     </template>

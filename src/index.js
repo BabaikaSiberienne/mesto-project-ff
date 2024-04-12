@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { initialCards } from './scripts/cards';
-import { createCard, delCard, cardImage, cardTitle } from './scripts/card';
+import { createCard, toLike, toPutAwayLike, toPutLike, likeToggle, hasLike, handleDelete } from './scripts/card';
 import { openPopUp, closePopUp } from './scripts/modal';
 import { enableValidation, clearValidation } from './scripts/validation';
 import { getF, toGetCards, editProfile, addCard, renewAvatar } from './scripts/api';
@@ -50,7 +50,7 @@ Promise.all([getF(), toGetCards()])
         profileImage.style.backgroundImage = `url(${profile.avatar})`;
         cards.forEach(function (card) {
             const amount = Object.keys(card.likes).length
-            placesContainer.append(createCard(card, profile, handleImagePopup))
+            placesContainer.append(createCard(card, profile, handleDelete, handleImagePopup, toLike))
         })
     })
     .catch((error) => {
@@ -102,7 +102,7 @@ function handleProfileFormSubmit(evt) {
     // Получите значение полей jobInput и nameInput из свойства value
     // Выберите элементы, куда должны быть вставлены значения полей
     // Вставьте новые значения с помощью textContent
-    editProfile()
+    editProfile(editProfileNameInput.value, editProfileDescriptionInput.value)
         .then((profile) => {
             profileTitle.textContent = profile.name
             profileDescription.textContent = profile.about
@@ -142,11 +142,10 @@ function handleCardFormSubmit(evt) {
     const newCard = {
         link: inputLinkCard.value,
         name: inputNameCard.value,
-        likes: [],
     }
     addCard(newCard)
         .then((card) => {
-            placesContainer.prepend(createCard(card, card.owner, handleImagePopup))
+            placesContainer.prepend(createCard(card, card.owner, handleDelete, handleImagePopup, toLike))
             popUpAddForm.reset()
             closePopUp(popUpAdd);
         })

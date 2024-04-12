@@ -1,5 +1,4 @@
-import { validationConfig } from "../index.js";
-
+import { disableSubmitButton } from "../utils/utils";
 const showInputError = (formElement, inputElement, errorMessage, validationConfig) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     inputElement.classList.add(validationConfig.inputErrorSelector);
@@ -60,8 +59,7 @@ function hasInvalidInput(inputList) {
 
 function toggleButtonState(inputList, buttonElement, validationConfig) {
     if (hasInvalidInput(inputList)) {
-        buttonElement.classList.add(validationConfig.disabledButtonSelector);
-        buttonElement.setAttribute('disabled', 'granny')
+        disableSubmitButton(buttonElement, validationConfig)
     }
 
     else {
@@ -72,8 +70,7 @@ function toggleButtonState(inputList, buttonElement, validationConfig) {
 
 export function clearValidation(formElement, validationConfig) {
     const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
-    buttonElement.classList.add(validationConfig.disabledButtonSelector);
-    buttonElement.setAttribute('disabled', 'granny')
+    disableSubmitButton(buttonElement, validationConfig)
     const inputElement = formElement.querySelector(validationConfig.inputSelector)
     inputElement.classList.remove(validationConfig.inputErrorSelector);
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);

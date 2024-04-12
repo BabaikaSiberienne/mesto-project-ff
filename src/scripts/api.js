@@ -26,31 +26,23 @@ export function toGetCards() {
     .then (checkRes)
 }
 
-export function editProfile() {
+export function editProfile(name, about) {
     return fetch(`${config.baseUrl}/users/me`, {
         method: 'PATCH',
         headers: config.headers,
         body: JSON.stringify({
-            name: `${editProfileName.value}`,
-            about: `${editProfileDescription.value}`,
+            name,
+            about,
         }),
     })
-        .then((profile) => {
-            if (profile.ok) {
-                savingPrifileDatafromServerToLocal(nameInput, jobInput, profile.name, profile.about, popUpEdit)
-                // console.log(profile.json())
-            }
-        })
-        .catch((error) => {
-            console.log('Ошибка. Запрос не выполнен: ', error)
-        })
+        .then (checkRes)
 }
 
-function savingPrifileDatafromServerToLocal(title, description, nameInput, aboutInput, popup) {
-    title.textContent = nameInput
-    description.textContent = aboutInput
-    closePopUp(popup)
-}
+// function savingPrifileDatafromServerToLocal(title, description, nameInput, aboutInput, popup) {
+//     title.textContent = nameInput
+//     description.textContent = aboutInput
+//     closePopUp(popup)
+// }
 
 export function addCard(card) {
     return fetch(`${config.baseUrl}/cards`, {

@@ -7,14 +7,15 @@ export function delCard(button) {
     cardElementClosest.remove();
 }
 
-function toPutLike(like) {
+export function toPutLike(like) {
     like.classList.add('card__like-button_is-active');
 }
 
-function toPutAwayLike(like) {
+export function toPutAwayLike(like) {
     like.classList.remove('card__like-button_is-active');
 }
-function likeToggle(button, card, counter) {
+
+export function likeToggle(button, card, counter) {
     if (!button.classList.contains('card__like-button_is-active')) {
         sendLikeToServer(card._id)
             .then((res) => {
@@ -40,14 +41,42 @@ function likeToggle(button, card, counter) {
     }
 }
 
-function hasLike(likes, profile) {
+export function hasLike(likes, profile) {
     return likes.some(function (like) {
         return like['_id'] === profile['_id']
     })
 }
 
+export function toLike(card, profile, likeButton) {
+    if (hasLike(card.likes, profile)) {
+        toPutLike(likeButton)
+    }
 
-export function createCard(card, profile, handImage) {
+}
+
+export function handleDelete (card, profile, cardid, delButton) {
+    if (card.owner['_id'] !== profile['_id']) {
+        delButton.classList.add('card__delete-button_disabled')
+        delButton.setAttribute('disabled', 'granny')
+    }
+    else {
+        delButton.classList.remove('card__delete-button_disabled')
+        delButton.removeAttribute('disabled')
+        delButton.addEventListener('click', () => {
+            deleteCardFromServer(cardid)
+                .then(() => {
+                    delCard(delButton)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        })
+    }
+
+}
+
+
+export function createCard(card, profile,  handDel, handImage, handLike) {
     const cardTemplate = document.querySelector('#card-template').content; //получаем содержимое шаблона
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true); //клонируем элемент   
     const cardImage = cardElement.querySelector('.card__image')
@@ -61,33 +90,11 @@ export function createCard(card, profile, handImage) {
     cardImage.alt = card.name;
     counter.textContent = card.likes.length
 
-    if (card.owner['_id'] !== profile['_id']) {
-        delButton.classList.add('card__delete-button_disabled')
-        delButton.setAttribute('disabled', 'granny')
-    }
-    else {
-        delButton.classList.remove('card__delete-button_disabled')
-        delButton.removeAttribute('disabled')
-        delButton.addEventListener('click', () => {
-            deleteCardFromServer(cardId)
-                .then(() => {
-                    delCard(delButton)
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        })
-    }
+    handDel(card, profile, cardId, delButton)
     cardImage.addEventListener('click', () => handImage(card));
-    if (hasLike(card.likes, profile)) {
-        toPutLike(likeButton)
-    }
-
-    likeButton.addEventListener('click', () => {
-        likeToggle(likeButton, card, counter)
-    })
+    handLike(card, profile, likeButton)
+    likeButton.addEventListener('click', () => {likeToggle(likeButton, card, counter)})
     return cardElement
-
 }
 
 

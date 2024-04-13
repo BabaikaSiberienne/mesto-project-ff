@@ -1,7 +1,4 @@
 import { checkRes } from "../utils/utils";
-import { createCard } from "./card";
-import { closePopUp } from "./modal"
-import { popUpEdit, editProfileForm, editProfileName, editProfileDescription, nameInput, jobInput } from "../utils/utils";
 
 const config = {
     baseUrl: 'https://nomoreparties.co/v1/wff-cohort-10',

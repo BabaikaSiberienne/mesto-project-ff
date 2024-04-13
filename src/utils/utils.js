@@ -28,10 +28,6 @@ export const editProfileNameInput = editProfileForm.elements.name
 export const editProfileDescriptionInput = editProfileForm.elements.description
 export const buttonTextInDaProcessOfLoading = "Сохранение..."
 export const buttonText = "Сохранить"
-export const disableSubmitButton = (buttonElement, validationConfig) => {
-    buttonElement.classList.add(validationConfig.disabledButtonSelector); 
-    buttonElement.setAttribute('disabled', 'true')
-}
 
 export const validationConfig = {
     formSelector: '.popup__form',

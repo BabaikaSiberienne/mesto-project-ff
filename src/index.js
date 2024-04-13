@@ -50,7 +50,7 @@ Promise.all([getF(), toGetCards()])
         profileImage.style.backgroundImage = `url(${profile.avatar})`;
         cards.forEach(function (card) {
             const amount = Object.keys(card.likes).length
-            placesContainer.append(createCard(card, profile, handleDelete, handleImagePopup, toLike))
+            placesContainer.append(createCard(card, profile, handleDelete, handleImagePopup, likeToggle))
         })
     })
     .catch((error) => {
@@ -145,7 +145,7 @@ function handleCardFormSubmit(evt) {
     }
     addCard(newCard)
         .then((card) => {
-            placesContainer.prepend(createCard(card, card.owner, handleDelete, handleImagePopup, toLike))
+            placesContainer.prepend(createCard(card, card.owner, handleDelete, handleImagePopup, likeToggle))
             popUpAddForm.reset()
             closePopUp(popUpAdd);
         })

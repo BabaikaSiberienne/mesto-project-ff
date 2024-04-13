@@ -54,15 +54,7 @@ export function toLike(card, profile, likeButton) {
 
 }
 
-export function handleDelete (card, profile, cardid, delButton) {
-    if (card.owner['_id'] !== profile['_id']) {
-        delButton.classList.add('card__delete-button_disabled')
-        delButton.setAttribute('disabled', 'granny')
-    }
-    else {
-        delButton.classList.remove('card__delete-button_disabled')
-        delButton.removeAttribute('disabled')
-        delButton.addEventListener('click', () => {
+export function handleDelete (cardid, delButton) {
             deleteCardFromServer(cardid)
                 .then(() => {
                     delCard(delButton)
@@ -70,10 +62,10 @@ export function handleDelete (card, profile, cardid, delButton) {
                 .catch((err) => {
                     console.log(err)
                 })
-        })
-    }
+        }
+    
 
-}
+
 
 
 export function createCard(card, profile,  handDel, handImage, handLike) {
@@ -90,12 +82,17 @@ export function createCard(card, profile,  handDel, handImage, handLike) {
     cardImage.alt = card.name;
     counter.textContent = card.likes.length
 
-    handDel(card, profile, cardId, delButton)
+    if (card.owner['_id'] !== profile['_id']) {
+        delButton.classList.add('card__delete-button_disabled')
+        delButton.setAttribute('disabled', 'granny')
+    }
+    else {
+        delButton.classList.remove('card__delete-button_disabled')
+        delButton.removeAttribute('disabled')
+        delButton.addEventListener('click', () => {handDel(cardId, delButton)})
+    }
     cardImage.addEventListener('click', () => handImage(card));
-    handLike(card, profile, likeButton)
-    likeButton.addEventListener('click', () => {likeToggle(likeButton, card, counter)})
+    toLike(card, profile, likeButton)
+    likeButton.addEventListener('click', () => {handLike(likeButton, card, counter)})
     return cardElement
 }
-
-
-

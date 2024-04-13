@@ -1,4 +1,8 @@
-import { disableSubmitButton } from "../utils/utils";
+export const disableSubmitButton = (buttonElement, validationConfig) => {
+    buttonElement.classList.add(validationConfig.disabledButtonSelector); 
+    buttonElement.setAttribute('disabled', 'true')
+}
+
 const showInputError = (formElement, inputElement, errorMessage, validationConfig) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     inputElement.classList.add(validationConfig.inputErrorSelector);
@@ -70,10 +74,9 @@ function toggleButtonState(inputList, buttonElement, validationConfig) {
 
 export function clearValidation(formElement, validationConfig) {
     const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
-    disableSubmitButton(buttonElement, validationConfig)
-    const inputElement = formElement.querySelector(validationConfig.inputSelector)
-    inputElement.classList.remove(validationConfig.inputErrorSelector);
-    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    errorElement.textContent = ""
+    disableSubmitButton(buttonElement, validationConfig);
+    const inputs = formElement.querySelectorAll(validationConfig.inputSelector);
+    inputs.forEach(input => hideInputError(input));
+     
 }
 
